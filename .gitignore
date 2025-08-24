@@ -1,0 +1,66 @@
+# Build results
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Rider
+.idea/
+.idea.*
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# Visual Studio
+*.vs/
+*.vssscc
+*.vsscc
+*.cache
+*.tss
+
+# Dotnet publish artifacts
+publish/
+*.dbmdl
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
+*.nuspec
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Dotnet environment files
+.env
+.env.*
+
+# Logs
+*.log
+
+# Others
+TestResults/
+*.pidb
+*.svclog
+*.userprefs
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+*.bak
+*.tmp
+*.swp
+*.swo
+*.swn
