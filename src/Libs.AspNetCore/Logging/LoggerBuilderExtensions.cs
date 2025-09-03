@@ -5,7 +5,7 @@ namespace FwksLabs.Libs.AspNetCore.Logging;
 
 public static class LoggerBuilderExtensions
 {
-    public static ILogger MinimalIfInvalid()
+    public static ILogger ProvideBootstrapLogger()
     {
         return Log.Logger is Logger
             ? Log.Logger
