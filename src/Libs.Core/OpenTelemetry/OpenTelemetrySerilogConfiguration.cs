@@ -9,31 +9,40 @@ namespace FwksLabs.Libs.Core.OpenTelemetry;
 
 public static class OpenTelemetrySerilogConfiguration
 {
-    public static LoggerConfiguration Create(OpenTelemetryLoggerOptions loggerOptions, OpenTelemetryAppInfoOptions serviceOptions)
+    public static LoggerConfiguration Create(Action<OpenTelemetrySerilogOptions> optionsAction)
     {
-        loggerOptions.Attributes.Add(OpenTelemetryProperties.Standard.ServiceInstanceId, Environment.MachineName);
-        loggerOptions.Attributes.Add(OpenTelemetryProperties.Standard.ServiceName, serviceOptions.Name.Kebaberize());
-        loggerOptions.Attributes.Add(OpenTelemetryProperties.Standard.ServiceVersion, serviceOptions.Version);
-        
-        loggerOptions.Attributes.Add(OpenTelemetryProperties.FwksLabs.ServicePlatform, serviceOptions.Platform.Kebaberize());
-        loggerOptions.Attributes.Add(OpenTelemetryProperties.FwksLabs.ServiceNamespace, serviceOptions.Namespace.Kebaberize());
-        loggerOptions.Attributes.Add(OpenTelemetryProperties.FwksLabs.ServiceMaintainer, serviceOptions.Maintainer.Kebaberize());
+        var options = new OpenTelemetrySerilogOptions();
 
-        var minimumLevel = loggerOptions.MinimumLevel.AsEnum<LogEventLevel>();
+        optionsAction.Invoke(options);
+
+        AddAttributes();
+
+        var minimumLevel = options.LoggerMinimumLevel.AsEnum<LogEventLevel>();
 
         var configuration = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .MinimumLevel.Is(minimumLevel);
 
-        foreach (var level in loggerOptions.MinimumLevelOverrides)
+        foreach (var level in options.LoggerMinimumLevelOverrides)
             configuration.MinimumLevel.Override(level.Key, level.Value.AsEnum<LogEventLevel>());
 
         configuration.WriteTo.OpenTelemetry(
-            endpoint: loggerOptions.CollectorEndpoint,
+            endpoint: options.LoggerCollectorEndpoint,
             protocol: OtlpProtocol.Grpc,
             restrictedToMinimumLevel: minimumLevel,
-            resourceAttributes: loggerOptions.Attributes);
+            resourceAttributes: options.Attributes);
 
         return configuration;
+
+        void AddAttributes()
+        {
+            options.Attributes.Add(OpenTelemetryProperties.Standard.ServiceInstanceId, Environment.MachineName);
+            options.Attributes.Add(OpenTelemetryProperties.Standard.ServiceName, options.AppName.Kebaberize());
+            options.Attributes.Add(OpenTelemetryProperties.Standard.ServiceVersion, options.AppVersion);
+
+            options.Attributes.Add(OpenTelemetryProperties.FwksLabs.ServicePlatform, options.AppPlatform.Kebaberize());
+            options.Attributes.Add(OpenTelemetryProperties.FwksLabs.ServiceNamespace, options.AppNamespace.Kebaberize());
+            options.Attributes.Add(OpenTelemetryProperties.FwksLabs.ServiceMaintainer, options.AppMaintainer.Kebaberize());
+        }
     }
 }
