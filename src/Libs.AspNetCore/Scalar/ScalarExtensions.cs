@@ -7,11 +7,8 @@ namespace FwksLabs.Libs.AspNetCore.Scalar;
 
 public static class ScalarExtensions
 {
-    public static WebApplication MapDefaultScalar(this WebApplication app, string title, bool isDevelopment)
+    public static WebApplication MapDefaultScalar(this WebApplication app, string title)
     {
-        if (isDevelopment is false)
-            return app;
-
         app.MapOpenApi();
         app.MapScalarApiReference(x =>
         {
