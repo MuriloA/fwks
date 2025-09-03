@@ -2,7 +2,9 @@ using System;
 
 namespace FwksLabs.Libs.Core.Abstractions;
 
-public interface IEntity
+public interface IEntity : IEntity<Guid>;
+
+public interface IEntity<T> where T : struct
 {
-    Guid Id { get; init; }
+    T Id { get; init; }
 }

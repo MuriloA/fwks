@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Asp.Versioning;
+using FwksLabs.Libs.AspNetCore.MinimalApi.Abstractions;
+using FwksLabs.Libs.AspNetCore.MinimalApi.Attributes;
 using FwksLabs.Libs.Core.Extensions;
 using Humanizer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace FwksLabs.Libs.AspNetCore.MinimalApi;
+namespace FwksLabs.Libs.AspNetCore.MinimalApi.Configuration;
 
 public static class MinimalApiConfiguration
 {
@@ -20,16 +22,16 @@ public static class MinimalApiConfiguration
 
         foreach (var resource in types.Where(IsResourceGroup))
         {
-            var attr = resource.GetCustomAttribute<ResourceGroupAttribute>();
+            var attr = resource.GetCustomAttribute<ResourcePrefixAttribute>();
 
             if (attr is null)
                 continue;
 
             builder
                 .MapGroup($"v{{version:apiVersion}}/{attr.Prefix}")
-                .ConfigureTags(attr.Tags, attr.Prefix)
-                .ConfigureProblems(attr.Problems)
-                .ConfigureVersionSet(attr.Versions)
+                .ConfigureTags(attr, attr.Prefix)
+                .ConfigureProblems(resource)
+                .ConfigureVersionSet(resource)
                 .ConfigureEndpoints(types, resource);
         }
 
@@ -41,18 +43,20 @@ public static class MinimalApiConfiguration
         }
     }
 
-    private static RouteGroupBuilder ConfigureTags(this RouteGroupBuilder builder, string? tags, string fallback)
+    private static RouteGroupBuilder ConfigureTags(this RouteGroupBuilder builder, ResourcePrefixAttribute attr, string fallback)
     {
+        var tags = attr.Tags.Select(x => x.IsNullOrWhiteSpace() is false);
+        
         return builder
-            .WithTags(tags.IsNullOrWhiteSpace()
-                ? [fallback.Pascalize()]
-                : tags.ToArrayOf<string>());
+            .WithTags(tags.Any()
+                ? attr.Tags
+                : [fallback.Pascalize()]);
     }
 
-    private static RouteGroupBuilder ConfigureProblems(this RouteGroupBuilder builder, string? problems)
+    private static RouteGroupBuilder ConfigureProblems(this RouteGroupBuilder builder, Type resource)
     {
         var uniqueProblems = new List<int> { StatusCodes.Status500InternalServerError }
-            .Concat(problems.IsNullOrWhiteSpace() ? [] : problems.ToArrayOf<int>())
+            .Concat(resource.GetCustomAttributes<ResourceProblemAttribute>()?.Select(x => x.Problem) ?? [])
             .Distinct();
 
         foreach (var problem in uniqueProblems)
@@ -61,9 +65,9 @@ public static class MinimalApiConfiguration
         return builder;
     }
 
-    private static RouteGroupBuilder ConfigureVersionSet(this RouteGroupBuilder builder, string? versions)
+    private static RouteGroupBuilder ConfigureVersionSet(this RouteGroupBuilder builder, Type resource)
     {
-        var availableVersions = versions.IsNullOrWhiteSpace() ? [1] : versions.ToArrayOf<int>();
+        var availableVersions = resource.GetCustomAttribute<ResourceVersionSetAttribute>()?.Versions ?? [1];
 
         var set = builder.NewApiVersionSet().ReportApiVersions();
 

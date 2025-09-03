@@ -1,3 +1,4 @@
+using System;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -17,14 +18,12 @@ public static class JsonSerializerOptionsConfiguration
 
     public static void Configure(JsonSerializerOptions options)
     {
+        options.AllowTrailingCommas = true;
         options.PropertyNameCaseInsensitive = true;
         options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        options.WriteIndented = false;
         options.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        options.AllowTrailingCommas = true;
-
+        options.WriteIndented = false;
         options.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
-
         options.Converters.Clear();
         options.Converters.Add(new JsonStringEnumConverter());
     }

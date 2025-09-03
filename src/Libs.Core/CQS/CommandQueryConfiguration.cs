@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Linq;
-using FwksLabs.Libs.Core.Abstractions;
+using FwksLabs.Libs.Core.CQS.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FwksLabs.Libs.Core.Configuration;
+namespace FwksLabs.Libs.Core.CQS;
 
-public static class OperationHandlerConfiguration
+public static class CommandQueryConfiguration
 {
     private static readonly Type[] HandlerTypes =
-    {
-        typeof(IOperationHandler<>),
-        typeof(IOperationHandler<,>)
-    };
+    [
+        typeof(ICommandHandler<>),
+        typeof(ICommandHandler<,>),
+        typeof(IQueryHandler<>),
+        typeof(IQueryHandler<,>)
+    ];
 
-    public static IServiceCollection AddOperationHandlersFromAssembly<TAssembly>(this IServiceCollection services)
+    public static IServiceCollection AddHandlersFromAssembly<TAssembly>(this IServiceCollection services)
     {
         var assembly = typeof(TAssembly).Assembly;
 

@@ -24,13 +24,13 @@ public static class RouteHandlerBuilderExtensions
             .WithTags(tags);
     }
 
-    public static RouteHandlerBuilder WithEndpointInfo(this RouteHandlerBuilder builder, OpenApiEndpointInfo meta)
+    public static RouteHandlerBuilder WithEndpointInfo(this RouteHandlerBuilder builder, OpenApiEndpointInfo info)
     {
         return builder
-            .WithName(meta.Name ?? meta.Summary.Pascalize())
-            .WithSummary(meta.Summary)
-            .WithDescription(meta.Description)
-            .WithTags(meta.Tags);
+            .WithName(info.Name ?? info.Summary.Pascalize())
+            .WithSummary(info.Summary)
+            .WithDescription(info.Description)
+            .WithTags(info.Tags);
     }
 
     public static RouteHandlerBuilder ProducesProblems(this RouteHandlerBuilder builder, params int[] statusCodes)
