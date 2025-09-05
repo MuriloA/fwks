@@ -25,7 +25,6 @@ public static class CorsExtensions
         return services.AddCors(options =>
         {
             foreach (var policy in policies)
-            {
                 if (policy.Name.EqualsTo("default"))
                 {
                     if (defaultIsAdded)
@@ -35,8 +34,9 @@ public static class CorsExtensions
                     defaultIsAdded = true;
                 }
                 else
+                {
                     options.AddPolicy(policy.Name, BuildPolicy(policy));
-            }
+                }
         });
 
         Action<CorsPolicyBuilder> BuildPolicy(CorsPolicyOptions policy)

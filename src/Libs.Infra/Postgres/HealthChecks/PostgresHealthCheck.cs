@@ -12,7 +12,7 @@ public sealed class PostgresHealthCheck(
     ILogger<PostgresHealthCheck> logger,
     IServiceProvider serviceProvider) : IHealthCheck
 {
-    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())
     {
         try
         {
@@ -34,7 +34,7 @@ public sealed class PostgresHealthCheck(
         catch (Exception ex)
         {
             logger.LogError(ex, "Error while trying to reach postgres instance.");
-            
+
             return new HealthCheckResult(context.Registration.FailureStatus, "An error occurred while trying to connect to the PostgreSQL isntance.", ex);
         }
     }

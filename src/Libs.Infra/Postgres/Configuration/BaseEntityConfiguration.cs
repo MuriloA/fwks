@@ -19,6 +19,15 @@ public class BaseEntityConfiguration<TEntity, TKey> : IEntityTypeConfiguration<T
     protected virtual string SchemaName { get; } = "App";
     protected virtual string PrimaryKeyName { get; set; } = $"PK_{EntityName}";
 
+    public void Configure(EntityTypeBuilder<TEntity> builder)
+    {
+        builder.ToTable(TableName, SchemaName);
+
+        ConfigureIds(builder);
+
+        Extend(builder);
+    }
+
     protected virtual void Extend(EntityTypeBuilder<TEntity> builder)
     {
         // Customize extensions
@@ -29,14 +38,5 @@ public class BaseEntityConfiguration<TEntity, TKey> : IEntityTypeConfiguration<T
         builder
             .HasKey(x => x.Id)
             .HasName(PrimaryKeyName);
-    }
-
-    public void Configure(EntityTypeBuilder<TEntity> builder)
-    {
-        builder.ToTable(TableName, SchemaName);
-
-        ConfigureIds(builder);
-
-        Extend(builder);
     }
 }

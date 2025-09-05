@@ -20,7 +20,7 @@ public static class ResilienceExtensions
         HttpStatusCode.ServiceUnavailable,
         HttpStatusCode.GatewayTimeout
     ];
-    
+
     public static ResiliencePipelineBuilder<HttpResponseMessage> AddTimeout(this ResiliencePipelineBuilder<HttpResponseMessage> builder, string name,
         Action<HttpTimeoutStrategyOptions>? optionsAction = null)
     {

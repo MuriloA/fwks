@@ -3,7 +3,6 @@ using FwksLabs.Libs.Core.Extensions;
 using Humanizer;
 using Serilog;
 using Serilog.Events;
-using Serilog.Sinks.OpenTelemetry;
 
 namespace FwksLabs.Libs.Core.OpenTelemetry;
 
@@ -27,8 +26,7 @@ public static class OpenTelemetrySerilogConfiguration
             configuration.MinimumLevel.Override(level.Key, level.Value.AsEnum<LogEventLevel>());
 
         configuration.WriteTo.OpenTelemetry(
-            endpoint: options.LoggerCollectorEndpoint,
-            protocol: OtlpProtocol.Grpc,
+            options.LoggerCollectorEndpoint,
             restrictedToMinimumLevel: minimumLevel,
             resourceAttributes: options.Attributes);
 

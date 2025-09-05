@@ -11,14 +11,12 @@ public sealed record HealthCheckDependencyReport
     public required TimeSpan Duration { get; init; }
     public required string[] Tags { get; init; }
 
-    public static HealthCheckDependencyReport From(KeyValuePair<string, HealthReportEntry> entry)
-    {
-        return new HealthCheckDependencyReport
+    public static HealthCheckDependencyReport From(KeyValuePair<string, HealthReportEntry> entry) =>
+        new()
         {
             Name = entry.Key,
             Status = entry.Value.Status,
             Duration = entry.Value.Duration,
             Tags = [.. entry.Value.Tags]
         };
-    }
 }

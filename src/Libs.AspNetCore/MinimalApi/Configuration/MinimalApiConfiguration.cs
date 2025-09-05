@@ -46,7 +46,7 @@ public static class MinimalApiConfiguration
     private static RouteGroupBuilder ConfigureTags(this RouteGroupBuilder builder, ResourcePrefixAttribute attr, string fallback)
     {
         var tags = attr.Tags.Select(x => x.IsNullOrWhiteSpace() is false);
-        
+
         return builder
             .WithTags(tags.Any()
                 ? attr.Tags

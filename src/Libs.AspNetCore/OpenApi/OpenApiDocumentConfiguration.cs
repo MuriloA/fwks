@@ -56,29 +56,25 @@ public static class OpenApiDocumentConfiguration
         });
     }
 
-    public static OpenApiOptions AddJwtBearerSecurity(this OpenApiOptions options)
-    {
-        return options.AddSecuritySchemeAndRequirement(new OpenApiSecurityScheme
+    public static OpenApiOptions AddJwtBearerSecurity(this OpenApiOptions options) =>
+        options.AddSecuritySchemeAndRequirement(new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.Http,
             Name = AppSecuritySchemes.JwtBearer,
             Description = "JWT Authorization header using the Bearer scheme.",
             In = ParameterLocation.Header,
             Scheme = AppSecuritySchemes.JwtBearer.ToLower(),
-            BearerFormat = "JWT",
+            BearerFormat = "JWT"
         });
-    }
 
-    public static OpenApiOptions AddOidcSecurity(this OpenApiOptions options, AuthServerOptions authServerOptions)
-    {
-        return options.AddSecuritySchemeAndRequirement(new OpenApiSecurityScheme
+    public static OpenApiOptions AddOidcSecurity(this OpenApiOptions options, AuthServerOptions authServerOptions) =>
+        options.AddSecuritySchemeAndRequirement(new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.OpenIdConnect,
             Name = AppSecuritySchemes.Oidc,
             Description = "OIDC Authorization header using the Bearer scheme.",
             OpenIdConnectUrl = new Uri($"{authServerOptions.AuthorityUrl}/realms/{authServerOptions.Realm}/.well-known/openid-configuration")
         });
-    }
 
     public static OpenApiOptions AddOAuth2Security(this OpenApiOptions options, AuthServerOptions authServerOptions)
     {
@@ -111,7 +107,6 @@ public static class OpenApiDocumentConfiguration
                 operation.Parameters ??= [];
 
                 if (operation.Parameters.All(p => p.Name != AppHeaders.CorrelationId))
-                {
                     operation.Parameters.Add(new OpenApiParameter
                     {
                         Name = AppHeaders.CorrelationId,
@@ -125,8 +120,8 @@ public static class OpenApiDocumentConfiguration
                         },
                         Description = "Correlation Id for request tracking and tracing"
                     });
-                }
             }
+
             return Task.CompletedTask;
         });
     }
@@ -142,7 +137,6 @@ public static class OpenApiDocumentConfiguration
                 operation.Parameters ??= [];
 
                 if (operation.Parameters.All(p => p.Name != AppHeaders.SupportKey))
-                {
                     operation.Parameters.Add(new OpenApiParameter
                     {
                         Name = AppHeaders.SupportKey,
@@ -155,7 +149,6 @@ public static class OpenApiDocumentConfiguration
                         },
                         Description = "Support key for authorization"
                     });
-                }
             }
 
             return Task.CompletedTask;

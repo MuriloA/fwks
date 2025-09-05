@@ -15,8 +15,7 @@ libs-pack:
 	@echo "Packing the project $(VERSION)" && \
 	dotnet pack --configuration Release --output $(OUTPUT_DIR) -p:Version=$(VERSION)
 
-cli-install:
-	$(MAKE) libs-pack
+cli-install: libs-pack
 	@echo "Removing old CLI tool (if any)" && \
 	dotnet tool uninstall --global $(PROJECT_NAME).cli || true
 	@echo "Installing CLI" && \

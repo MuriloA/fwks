@@ -28,6 +28,8 @@ public sealed class CorrelationIdMiddleware : IMiddleware
         appContext.SetCorrelationId(correlationId);
 
         using (LogContext.PushProperty(nameof(AppHeaders.CorrelationId), correlationId))
+        {
             return next(context);
+        }
     }
 }

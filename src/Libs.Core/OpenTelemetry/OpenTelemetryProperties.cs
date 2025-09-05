@@ -7,7 +7,7 @@ public static class OpenTelemetryProperties
         public const string Traces = "/v1/traces";
         public const string Metrics = "/v1/metrics";
     }
-    
+
     public class Standard
     {
         public const string ServiceInstanceId = "service.instance.id";

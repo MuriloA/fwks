@@ -14,7 +14,7 @@ public static class OpenTelemetryExtensions
         Func<HttpRequestMessage, bool>? requestFilter = null)
     {
         var excludedPaths = pathsFilter.Select(x => x.ToLowerInvariant()).Concat(["/health/"]).ToArray();
-        
+
         return builder
             .AddHttpClientInstrumentation(options =>
             {
@@ -37,7 +37,7 @@ public static class OpenTelemetryExtensions
     public static TracerProviderBuilder AddAspNetCoreInstrumentationWithFilters(this TracerProviderBuilder builder, IEnumerable<string> pathsFilter)
     {
         var excludedPaths = pathsFilter.Select(x => x.ToLowerInvariant()).Concat(["/health/"]).ToArray();
-        
+
         return builder
             .AddAspNetCoreInstrumentation(options =>
             {

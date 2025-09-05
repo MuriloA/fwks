@@ -4,19 +4,41 @@ using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
 using FwksLabs.Libs.Core.Constants;
+using FwksLabs.Libs.Core.Types;
 using Humanizer;
 
 namespace FwksLabs.Libs.Core.Extensions;
 
 public static class FluentValidationExtensions
 {
-    public static IDictionary<string, object?> GetMessages(this ValidationResult result)
+    public static IDictionary<string, object?> ToErrorDictionary(this ValidationResult result)
     {
-        return result.Errors
-            .GroupBy(e => e.PropertyName)
-            .ToDictionary(
-                g => g.Key.Camelize(),
-                object? (g) => g.Select(e => e.ErrorMessage).ToArray());
+        var errors = result.Errors.Select(failure =>
+        {
+            var isCollection = failure.FormattedMessagePlaceholderValues.TryGetValue("CollectionIndex", out var index);
+
+            if (isCollection is false)
+                return failure;
+
+            return new NormalizedValidationFailure(
+                failure.FormattedMessagePlaceholderValues["PropertyName"].ToString()!,
+                failure.ErrorMessage,
+                int.Parse(index!.ToString()!));
+        });
+
+        return new Dictionary<string, object?>
+        {
+            {
+                "errors", errors
+                    .GroupBy(x => x.PropertyName)
+                    .ToDictionary(
+                        errGroup => errGroup.Key.Camelize(),
+                        errGroup => errGroup.GroupBy(x => x.Index)
+                            .ToDictionary(
+                                ixGroup => ixGroup.Key,
+                                ixGroup => ixGroup.Select(x => x.ErrorMessage)))
+            }
+        };
     }
 
     public static IRuleBuilderOptions<T, string?> PhoneNumber<T>(this IRuleBuilder<T, string?> ruleBuilder)
