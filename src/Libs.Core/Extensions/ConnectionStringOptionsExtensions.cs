@@ -21,13 +21,20 @@ public static class ConnectionStringOptionsExtensions
         ]);
     }
 
-    public static string BuildRedisConnectionString(this IConnectionStringOptions builder) => builder.BuildConnectionString(',', '=', builder.Server, InflectorExtensions.Camelize);
+    public static string BuildRedisConnectionString(this IConnectionStringOptions builder)
+    {
+        return builder.BuildConnectionString(',', '=', builder.Server, InflectorExtensions.Camelize);
+    }
 
-    public static string BuildPostgresConnectionString(this IConnectionStringOptions builder) =>
-        builder.BuildConnectionString(';', '=', $"Host={builder.Server}", InflectorExtensions.Pascalize);
+    public static string BuildPostgresConnectionString(this IConnectionStringOptions builder)
+    {
+        return builder.BuildConnectionString(';', '=', $"Host={builder.Server}", InflectorExtensions.Pascalize);
+    }
 
-    public static string BuildLiteDbConnectionString(this IConnectionStringOptions builder) =>
-        builder.BuildConnectionString(';', '=', $"Filename={builder.Server}", InflectorExtensions.Pascalize);
+    public static string BuildLiteDbConnectionString(this IConnectionStringOptions builder)
+    {
+        return builder.BuildConnectionString(';', '=', $"Filename={builder.Server}", InflectorExtensions.Pascalize);
+    }
 
     public static string BuildMongoDbConnectionString(this IConnectionStringOptions builder, bool encodeUrl = false)
     {

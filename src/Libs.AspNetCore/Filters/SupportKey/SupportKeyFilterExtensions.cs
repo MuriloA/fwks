@@ -7,7 +7,13 @@ namespace FwksLabs.Libs.AspNetCore.Filters.SupportKey;
 
 public static class SupportKeyFilterExtensions
 {
-    public static IServiceCollection AddSupportKeyFilter(this IServiceCollection services, Action<SupportKeyFilterOptions> setupAction) => services.Configure(setupAction);
+    public static IServiceCollection AddSupportKeyFilter(this IServiceCollection services, Action<SupportKeyFilterOptions> setupAction)
+    {
+        return services.Configure(setupAction);
+    }
 
-    public static RouteHandlerBuilder WithSupportKeyFilter(this RouteHandlerBuilder builder) => builder.AddEndpointFilter<SupportKeyFilter>();
+    public static RouteHandlerBuilder WithSupportKeyFilter(this RouteHandlerBuilder builder)
+    {
+        return builder.AddEndpointFilter<SupportKeyFilter>();
+    }
 }

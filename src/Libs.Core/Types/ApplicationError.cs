@@ -13,5 +13,8 @@ namespace FwksLabs.Libs.Core.Types;
 /// </summary>
 public sealed record ApplicationError(int Code, string Name, string Title, string Detail, string? Instance = null)
 {
-    public static implicit operator int(ApplicationError error) => error.Code;
+    public static implicit operator int(ApplicationError error)
+    {
+        return error.Code;
+    }
 }

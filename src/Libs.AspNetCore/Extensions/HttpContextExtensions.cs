@@ -19,5 +19,8 @@ public static class HttpContextExtensions
         return service;
     }
 
-    public static T? GetService<T>(this HttpContext context) => context.RequestServices.GetService<T>();
+    public static T? GetService<T>(this HttpContext context)
+    {
+        return context.RequestServices.GetService<T>();
+    }
 }

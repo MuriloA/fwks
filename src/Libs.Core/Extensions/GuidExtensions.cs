@@ -5,5 +5,8 @@ namespace FwksLabs.Libs.Core.Extensions;
 
 public static class GuidExtensions
 {
-    public static string Encode(this Guid guid) => Base62Encoder.Encode(guid);
+    public static string Encode(this Guid guid)
+    {
+        return Base62Encoder.Encode(guid);
+    }
 }

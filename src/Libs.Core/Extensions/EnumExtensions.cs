@@ -16,6 +16,8 @@ public static class EnumExtensions
         throw new InvalidCastException($"'{value}' is not a valid '{typeof(T).Name}' enum value.");
     }
 
-    public static EnumMetadata GetMetadata<TEnum>(this TEnum value, Action<EnumMetadataOptions>? optionsAction = null) where TEnum : Enum =>
-        EnumMetadata.From(value, optionsAction);
+    public static EnumMetadata GetMetadata<TEnum>(this TEnum value, Action<EnumMetadataOptions>? optionsAction = null) where TEnum : Enum
+    {
+        return EnumMetadata.From(value, optionsAction);
+    }
 }

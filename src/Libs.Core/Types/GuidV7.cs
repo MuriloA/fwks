@@ -16,8 +16,10 @@ public static class GuidV7
         _offset = null;
     }
 
-    public static Guid Create() =>
-        _offset is null
+    public static Guid Create()
+    {
+        return _offset is null
             ? Guid.CreateVersion7()
             : Guid.CreateVersion7(_offset.Value);
+    }
 }

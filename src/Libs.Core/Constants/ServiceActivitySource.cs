@@ -10,8 +10,10 @@ public static class ServiceActivitySource
     private static ActivitySource? _activitySource;
     private static readonly Lock Lock = new();
 
-    public static ActivitySource Instance =>
-        _activitySource ?? throw new NotInitializedException(nameof(ActivitySource));
+    public static ActivitySource Instance
+    {
+        get { return _activitySource ?? throw new NotInitializedException(nameof(ActivitySource)); }
+    }
 
     public static void Initialize(string serviceName)
     {

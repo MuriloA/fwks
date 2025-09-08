@@ -9,7 +9,10 @@ namespace FwksLabs.Libs.Core.Extensions;
 
 public static class StringExtensions
 {
-    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? input) => string.IsNullOrWhiteSpace(input);
+    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? input)
+    {
+        return string.IsNullOrWhiteSpace(input);
+    }
 
     public static TOutput[] ToArrayOf<TOutput>(this string input, char separator = ',')
     {
@@ -22,18 +25,32 @@ public static class StringExtensions
             .ToArray();
     }
 
-    public static bool EqualsTo(this string? input, string target) => string.Equals(input, target, StringComparison.InvariantCultureIgnoreCase);
+    public static bool EqualsTo(this string? input, string target)
+    {
+        return string.Equals(input, target, StringComparison.InvariantCultureIgnoreCase);
+    }
 
-    public static bool HasUniqueCharacters(this string input) => input.All(new HashSet<char>().Add);
+    public static bool HasUniqueCharacters(this string input)
+    {
+        return input.All(new HashSet<char>().Add);
+    }
 
-    public static Guid Decode(this string input) => Base62Encoder.Decode(input);
+    public static Guid Decode(this string input)
+    {
+        return Base62Encoder.Decode(input);
+    }
 
-    public static string PluralizeEntity(this string name) =>
-        name.Contains("Entity")
+    public static string PluralizeEntity(this string name)
+    {
+        return name.Contains("Entity")
             ? name[..^"Entity".Length].Pluralize()
             : name.Pluralize();
+    }
 
-    public static string Format(this string input, params object[] args) => string.Format(input, args);
+    public static string Format(this string input, params object[] args)
+    {
+        return string.Format(input, args);
+    }
 
     public static bool IsValidTimeZone(this string? id)
     {
@@ -52,7 +69,10 @@ public static class StringExtensions
         }
     }
 
-    public static string ClearSpaces(this string input) => input.Replace(" ", string.Empty);
+    public static string ClearSpaces(this string input)
+    {
+        return input.Replace(" ", string.Empty);
+    }
 
     public static DateTime ToDateTime(this string input)
     {

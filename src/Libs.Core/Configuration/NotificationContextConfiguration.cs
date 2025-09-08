@@ -6,12 +6,16 @@ namespace FwksLabs.Libs.Core.Configuration;
 
 public static class NotificationContextConfiguration
 {
-    public static IServiceCollection AddNotificationContext(this IServiceCollection services) =>
-        services
+    public static IServiceCollection AddNotificationContext(this IServiceCollection services)
+    {
+        return services
             .AddScoped<INotificationContext, NotificationContext>();
+    }
 
     public static IServiceCollection AddNotificationContext<TNotificationContext>(this IServiceCollection services)
-        where TNotificationContext : class, INotificationContext =>
-        services
+        where TNotificationContext : class, INotificationContext
+    {
+        return services
             .AddScoped<INotificationContext, TNotificationContext>();
+    }
 }

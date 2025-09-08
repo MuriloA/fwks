@@ -56,8 +56,9 @@ public static class OpenApiDocumentConfiguration
         });
     }
 
-    public static OpenApiOptions AddJwtBearerSecurity(this OpenApiOptions options) =>
-        options.AddSecuritySchemeAndRequirement(new OpenApiSecurityScheme
+    public static OpenApiOptions AddJwtBearerSecurity(this OpenApiOptions options)
+    {
+        return options.AddSecuritySchemeAndRequirement(new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.Http,
             Name = SecuritySchemes.JwtBearer,
@@ -66,15 +67,18 @@ public static class OpenApiDocumentConfiguration
             Scheme = SecuritySchemes.JwtBearer.ToLower(),
             BearerFormat = "JWT"
         });
+    }
 
-    public static OpenApiOptions AddOidcSecurity(this OpenApiOptions options, AuthServerOptions authServerOptions) =>
-        options.AddSecuritySchemeAndRequirement(new OpenApiSecurityScheme
+    public static OpenApiOptions AddOidcSecurity(this OpenApiOptions options, AuthServerOptions authServerOptions)
+    {
+        return options.AddSecuritySchemeAndRequirement(new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.OpenIdConnect,
             Name = SecuritySchemes.Oidc,
             Description = "OIDC Authorization header using the Bearer scheme.",
             OpenIdConnectUrl = new Uri($"{authServerOptions.AuthorityUrl}/realms/{authServerOptions.Realm}/.well-known/openid-configuration")
         });
+    }
 
     public static OpenApiOptions AddOAuth2Security(this OpenApiOptions options, AuthServerOptions authServerOptions)
     {

@@ -3,17 +3,15 @@ using System.Threading.Tasks;
 using FwksLabs.Libs.Core.Constants;
 using FwksLabs.Libs.Core.Contexts;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog.Context;
 
 namespace FwksLabs.Libs.AspNetCore.Middlewares;
 
-public sealed class CorrelationIdMiddleware : IMiddleware
+public sealed class CorrelationIdMiddleware(
+    CorrelationContext correlationContext) : IMiddleware
 {
     public Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        var appContext = context.RequestServices.GetRequiredService<CorrelationContext>();
-
         var correlationId = context.Request.Headers.TryGetValue(CommonHeaders.CorrelationId, out var value)
             ? value.ToString()
             : Guid.NewGuid().ToString();
@@ -25,7 +23,7 @@ public sealed class CorrelationIdMiddleware : IMiddleware
             return Task.CompletedTask;
         });
 
-        appContext.SetCorrelationId(correlationId);
+        correlationContext.SetCorrelationId(correlationId);
 
         using (LogContext.PushProperty(nameof(CommonHeaders.CorrelationId), correlationId))
         {

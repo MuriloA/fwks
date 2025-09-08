@@ -13,13 +13,15 @@ public sealed record HealthCheckReadinessReport
     public IEnumerable<HealthCheckDependencyReport> Dependencies { get; init; } = [];
 
 
-    public static HealthCheckReadinessReport From(HealthReport report) =>
-        new()
+    public static HealthCheckReadinessReport From(HealthReport report)
+    {
+        return new HealthCheckReadinessReport
         {
             Status = GetStatus(report),
             TotalDuration = report.TotalDuration,
             Dependencies = [.. report.Entries.Select(HealthCheckDependencyReport.From)]
         };
+    }
 
     private static HealthStatus GetStatus(HealthReport report)
     {
