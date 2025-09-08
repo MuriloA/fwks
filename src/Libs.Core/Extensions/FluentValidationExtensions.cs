@@ -44,7 +44,7 @@ public static class FluentValidationExtensions
     public static IRuleBuilderOptions<T, string?> PhoneNumber<T>(this IRuleBuilder<T, string?> ruleBuilder)
     {
         return ruleBuilder
-            .Must(value => value is not null && AppRegex.PhoneNumber().IsMatch(value.ClearSpaces()))
+            .Must(value => value is not null && ApplicationRegex.PhoneNumber().IsMatch(value.ClearSpaces()))
             .WithMessage("{PropertyName} must be a valid phone number starting with + country code plus number.");
     }
 

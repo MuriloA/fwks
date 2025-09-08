@@ -60,10 +60,10 @@ public static class OpenApiDocumentConfiguration
         options.AddSecuritySchemeAndRequirement(new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.Http,
-            Name = AppSecuritySchemes.JwtBearer,
+            Name = SecuritySchemes.JwtBearer,
             Description = "JWT Authorization header using the Bearer scheme.",
             In = ParameterLocation.Header,
-            Scheme = AppSecuritySchemes.JwtBearer.ToLower(),
+            Scheme = SecuritySchemes.JwtBearer.ToLower(),
             BearerFormat = "JWT"
         });
 
@@ -71,7 +71,7 @@ public static class OpenApiDocumentConfiguration
         options.AddSecuritySchemeAndRequirement(new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.OpenIdConnect,
-            Name = AppSecuritySchemes.Oidc,
+            Name = SecuritySchemes.Oidc,
             Description = "OIDC Authorization header using the Bearer scheme.",
             OpenIdConnectUrl = new Uri($"{authServerOptions.AuthorityUrl}/realms/{authServerOptions.Realm}/.well-known/openid-configuration")
         });
@@ -83,7 +83,7 @@ public static class OpenApiDocumentConfiguration
         return options.AddSecuritySchemeAndRequirement(new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.OAuth2,
-            Name = AppSecuritySchemes.OAuth2,
+            Name = SecuritySchemes.OAuth2,
             Description = "OAuth2 Authorization Code Flow",
             Flows = new OpenApiOAuthFlows
             {
@@ -106,10 +106,10 @@ public static class OpenApiDocumentConfiguration
             {
                 operation.Parameters ??= [];
 
-                if (operation.Parameters.All(p => p.Name != AppHeaders.CorrelationId))
+                if (operation.Parameters.All(p => p.Name != CommonHeaders.CorrelationId))
                     operation.Parameters.Add(new OpenApiParameter
                     {
-                        Name = AppHeaders.CorrelationId,
+                        Name = CommonHeaders.CorrelationId,
                         In = ParameterLocation.Header,
                         Required = false,
                         Schema = new OpenApiSchema
@@ -136,10 +136,10 @@ public static class OpenApiDocumentConfiguration
             {
                 operation.Parameters ??= [];
 
-                if (operation.Parameters.All(p => p.Name != AppHeaders.SupportKey))
+                if (operation.Parameters.All(p => p.Name != CommonHeaders.SupportKey))
                     operation.Parameters.Add(new OpenApiParameter
                     {
-                        Name = AppHeaders.SupportKey,
+                        Name = CommonHeaders.SupportKey,
                         In = ParameterLocation.Header,
                         Required = true,
                         Schema = new OpenApiSchema

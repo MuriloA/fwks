@@ -1,6 +1,6 @@
 namespace FwksLabs.Libs.Core.Constants;
 
-public static class AppHealthCheckProperties
+public static class HealthCheckProperties
 {
     public class Headers
     {

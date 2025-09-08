@@ -1,6 +1,6 @@
-using System.Net;
 using System.Net.Mime;
 using FwksLabs.Libs.AspNetCore.Constants;
+using FwksLabs.Libs.AspNetCore.Extensions;
 using FwksLabs.Libs.Core.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -27,8 +27,9 @@ public static class UnexpectedErrorHandler
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = MediaTypeNames.Application.ProblemJson;
 
-            await context.Response.WriteAsJsonAsync(AppResponses.Problem(
-                HttpStatusCode.InternalServerError, "An unexpected error occurred", AppCommonErrors.UnexpectedError));
+            var result = Responses.Problem(CommonErrors.Unknown, context.GetErrorCodeConfiguration().Codes, null);
+
+            await result.ExecuteAsync(context);
         }));
     }
 }

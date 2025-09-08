@@ -32,7 +32,7 @@ public sealed class HttpServiceHealthCheck(
         {
             logger.LogError(ex, "Error while trying to reach service {ServiceName}.", context.Registration.Name);
 
-            return new HealthCheckResult(context.Registration.FailureStatus, AppCommonErrors.BadGateway, ex);
+            return new HealthCheckResult(context.Registration.FailureStatus, CommonErrors.BadGateway.Detail, ex);
         }
     }
 }

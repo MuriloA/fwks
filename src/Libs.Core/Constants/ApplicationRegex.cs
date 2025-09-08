@@ -2,7 +2,7 @@
 
 namespace FwksLabs.Libs.Core.Constants;
 
-public abstract partial class AppRegex
+public abstract partial class ApplicationRegex
 {
     [GeneratedRegex(@"^\+\d{1,3}\d{5,14}$")]
     public static partial Regex PhoneNumber();

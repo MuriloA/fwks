@@ -10,7 +10,7 @@ public static class PostgresHealthCheckConfiguration
 {
     public static IServiceCollection AddPostgresHealthCheck(this IServiceCollection services, string connString)
     {
-        string[] tags = [AppHealthCheckProperties.Tags.Readiness, AppHealthCheckProperties.Tags.TypeDatabase, AppHealthCheckProperties.Tags.Critical];
+        string[] tags = [HealthCheckProperties.Tags.Readiness, HealthCheckProperties.Tags.TypeDatabase, HealthCheckProperties.Tags.Critical];
 
         services
             .AddKeyedTransient<NpgsqlDataSource>("healthchecks-postgres", (_, _) => NpgsqlDataSource.Create(connString))

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FwksLabs.Libs.AspNetCore.Constants;
+using FwksLabs.Libs.AspNetCore.Extensions;
 using FwksLabs.Libs.Core.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -13,11 +14,13 @@ public sealed class SupportKeyFilter(
 {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        if (context.HttpContext.Request.Headers.TryGetValue(AppHeaders.SupportKey, out var supportKey) &&
-            supportKey.Equals(options.Value.Token)) return await next(context);
+        var hasHeader = context.HttpContext.Request.Headers.TryGetValue(CommonHeaders.SupportKey, out var headerValue);
+
+        if (hasHeader && headerValue.Equals(options.Value.Token))
+            return await next(context);
 
         logger.LogError("Unauthorized access attempt with support key.");
 
-        return AppResponses.Unauthorized(null, "Support Key Token not found.");
+        return Responses.Problem(CommonErrors.Unauthorized, context.GetErrorCodeConfiguration().Codes, null);
     }
 }

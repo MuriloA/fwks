@@ -2,7 +2,7 @@ using System;
 
 namespace FwksLabs.Libs.Core.Contexts;
 
-public class AppRequestContext
+public class CorrelationContext
 {
     public Guid CorrelationId { get; private set; }
 

@@ -33,7 +33,7 @@ public sealed record HealthCheckReadinessReport
         bool HasCriticalUnhealthy()
         {
             return report.Entries.Any(x =>
-                x.Value.Tags.Contains(AppHealthCheckProperties.Tags.Critical) &&
+                x.Value.Tags.Contains(HealthCheckProperties.Tags.Critical) &&
                 x.Value.Status is not HealthStatus.Healthy);
         }
     }
