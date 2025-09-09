@@ -11,10 +11,7 @@ public sealed class NotificationContext : INotificationContext
     private readonly Dictionary<string, object?> _messages = new();
 
     public ApplicationError? Error { get; private set; }
-    public IDictionary<string, object?> Messages
-    {
-        get { return _messages; }
-    }
+    public IDictionary<string, object?> Messages => _messages;
 
     public void Add(ApplicationError error, IDictionary<string, object?> messages)
     {

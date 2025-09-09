@@ -1,14 +1,14 @@
 using System;
 using System.Threading.Tasks;
+using FwksLabs.Libs.Core.Abstractions;
 using FwksLabs.Libs.Core.Constants;
-using FwksLabs.Libs.Core.Contexts;
 using Microsoft.AspNetCore.Http;
 using Serilog.Context;
 
 namespace FwksLabs.Libs.AspNetCore.Middlewares;
 
 public sealed class CorrelationIdMiddleware(
-    CorrelationContext correlationContext) : IMiddleware
+    ICorrelationIdContext correlationIdContext) : IMiddleware
 {
     public Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -23,7 +23,7 @@ public sealed class CorrelationIdMiddleware(
             return Task.CompletedTask;
         });
 
-        correlationContext.SetCorrelationId(correlationId);
+        correlationIdContext.SetCorrelationId(correlationId);
 
         using (LogContext.PushProperty(nameof(CommonHeaders.CorrelationId), correlationId))
         {

@@ -13,11 +13,11 @@ public sealed class DeferredResultHandlingMiddleware(
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         await next(context);
-        
+
         if (notificationContext.Error is not null && context.Response.HasStarted is false)
         {
             var response = Responses.Problem(notificationContext.Error!, errorCodeConfiguration.Codes, notificationContext.Messages);
-         
+
             await response.ExecuteAsync(context);
         }
     }

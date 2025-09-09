@@ -25,8 +25,5 @@ public record PageResponse<T>
     public bool HasNext { get; }
     public IReadOnlyCollection<T> Items { get; }
 
-    public static PageResponse<T> Create(int pageNumber, int pageSize, int totalItems, IReadOnlyCollection<T> items)
-    {
-        return new PageResponse<T>(pageNumber, pageSize, totalItems, items);
-    }
+    public static PageResponse<T> Create(int pageNumber, int pageSize, int totalItems, IReadOnlyCollection<T> items) => new(pageNumber, pageSize, totalItems, items);
 }

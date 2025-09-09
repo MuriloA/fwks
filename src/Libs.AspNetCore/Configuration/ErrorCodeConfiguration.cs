@@ -42,10 +42,7 @@ public class ErrorCodeConfiguration
         [CommonErrors.ExternalServiceUnavailable] = StatusCodes.Status503ServiceUnavailable
     };
 
-    public IDictionary<int, int> Codes
-    {
-        get { return _codes; }
-    }
+    public IDictionary<int, int> Codes => _codes;
 
     public static ErrorCodeConfiguration With(IDictionary<int, int> customErrors)
     {
@@ -56,13 +53,13 @@ public class ErrorCodeConfiguration
 
         return codeConfiguration;
     }
-    
+
     public static ErrorCodeConfiguration OverrideWith(IDictionary<int, int> customErrors)
     {
         var codeConfiguration = new ErrorCodeConfiguration();
 
         codeConfiguration.Codes.Clear();
-        
+
         foreach (var error in customErrors)
             codeConfiguration.Codes.TryAdd(error.Key, error.Value);
 

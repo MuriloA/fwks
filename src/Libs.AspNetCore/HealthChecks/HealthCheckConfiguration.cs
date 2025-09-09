@@ -16,12 +16,10 @@ public static class HealthCheckConfiguration
         [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
     };
 
-    public static IApplicationBuilder UseHealthCheckEndpoints(this IApplicationBuilder app)
-    {
-        return app
+    public static IApplicationBuilder UseHealthCheckEndpoints(this IApplicationBuilder app) =>
+        app
             .AddLivenessEndpoint()
             .AddReadinessEndpoint();
-    }
 
     private static IApplicationBuilder AddLivenessEndpoint(this IApplicationBuilder app)
     {

@@ -5,13 +5,7 @@ namespace FwksLabs.Libs.AspNetCore.Extensions;
 
 public static class EndpointFilterInvocationContextExtensions
 {
-    public static T GetRequiredService<T>(this EndpointFilterInvocationContext context)
-    {
-        return context.HttpContext.GetRequiredService<T>();
-    }
+    public static T GetRequiredService<T>(this EndpointFilterInvocationContext context) => context.HttpContext.GetRequiredService<T>();
 
-    public static T? GetService<T>(this EndpointFilterInvocationContext context)
-    {
-        return context.HttpContext.RequestServices.GetService<T>();
-    }
+    public static T? GetService<T>(this EndpointFilterInvocationContext context) => context.HttpContext.RequestServices.GetService<T>();
 }

@@ -5,8 +5,5 @@ namespace FwksLabs.Libs.AspNetCore.Results;
 
 public class DeferredResult : IResult
 {
-    public Task ExecuteAsync(HttpContext httpContext)
-    {
-        return Task.CompletedTask;
-    }
+    public Task ExecuteAsync(HttpContext httpContext) => Task.CompletedTask;
 }

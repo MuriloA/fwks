@@ -1,8 +1,9 @@
 using System;
+using FwksLabs.Libs.Core.Abstractions;
 
 namespace FwksLabs.Libs.Core.Contexts;
 
-public class CorrelationContext
+public class CorrelationIdContext : ICorrelationIdContext
 {
     public Guid CorrelationId { get; private set; }
 
