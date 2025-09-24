@@ -16,7 +16,7 @@ public sealed class PostgresHealthCheck(
     {
         try
         {
-            await using var dataSource = serviceProvider.GetRequiredKeyedService<NpgsqlDataSource>($"healthechecks-{context.Registration.Name}");
+            await using var dataSource = serviceProvider.GetRequiredKeyedService<NpgsqlDataSource>($"health-checks-{context.Registration.Name}");
 
             var connection = dataSource.CreateConnection();
 
@@ -29,13 +29,13 @@ public sealed class PostgresHealthCheck(
 
             return result is 1
                 ? HealthCheckResult.Healthy()
-                : HealthCheckResult.Unhealthy("PostgreSQL database is unavailable or unreachable.");
+                : HealthCheckResult.Unhealthy("Postgres database is unavailable or unreachable.");
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error while trying to reach postgres instance.");
 
-            return new HealthCheckResult(context.Registration.FailureStatus, "An error occurred while trying to connect to the PostgreSQL isntance.", ex);
+            return new HealthCheckResult(context.Registration.FailureStatus, "An error occurred while trying to connect to the Postgres instance.", ex);
         }
     }
 }

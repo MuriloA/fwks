@@ -13,7 +13,7 @@ public static class PostgresHealthCheckConfiguration
         string[] tags = [HealthCheckProperties.Tags.Readiness, HealthCheckProperties.Tags.TypeDatabase, HealthCheckProperties.Tags.Critical];
 
         services
-            .AddKeyedTransient<NpgsqlDataSource>("healthchecks-postgres", (_, _) => NpgsqlDataSource.Create(connString))
+            .AddKeyedTransient<NpgsqlDataSource>("health-checks-postgres", (_, _) => NpgsqlDataSource.Create(connString))
             .AddHealthChecks()
             .AddCheck<PostgresHealthCheck>("postgres", HealthStatus.Unhealthy, tags, TimeSpan.FromSeconds(5));
 

@@ -17,7 +17,7 @@ public sealed class HttpServiceHealthCheck(
     {
         try
         {
-            var httpClient = clientFactory.CreateClient($"healthechecks-{context.Registration.Name}");
+            var httpClient = clientFactory.CreateClient($"health-checks-{context.Registration.Name}");
 
             var response = await httpClient.GetAsync(string.Empty, cancellationToken);
 

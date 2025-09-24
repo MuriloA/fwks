@@ -16,7 +16,7 @@ public static class HttpServiceHealthCheckConfiguration
         name = name.Kebaberize();
         var timeout = TimeSpan.FromSeconds(timeoutInSeconds);
 
-        services.AddHttpClient($"healthechecks-{name}", client =>
+        services.AddHttpClient($"health-checks-{name}", client =>
         {
             client.DefaultRequestHeaders.Add(HealthCheckProperties.Headers.Client, name);
             client.BaseAddress = new Uri(url);
