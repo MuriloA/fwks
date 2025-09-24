@@ -22,7 +22,7 @@ public sealed class FluentValidationFilter<T> : IEndpointFilter
         var validationResult = await requestValidator.ValidateAsync(argument, context.HttpContext.RequestAborted);
 
         if (!validationResult.IsValid)
-            return Responses.Problem(CommonErrors.Validation, context.GetErrorCodeConfiguration().Codes, validationResult.ToErrorDictionary());
+            return Responses.Problem(CommonErrors.Validation, context.GetErrorCodeConfiguration().Codes, validationResult.NormalizeErrors());
 
         return await next(context);
     }

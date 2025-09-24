@@ -10,13 +10,7 @@ source-add:
 	@echo "Adding local source to Nuget.config" && \
 	dotnet nuget add source $(OUTPUT_DIR) --name $(NUGET_SOURCE_NAME)
 
-libs-pack:
+pack:
 	@rm $(OUTPUT_DIR) -rdf && mkdir -p $(OUTPUT_DIR)
 	@echo "Packing the project $(VERSION)" && \
 	dotnet pack --configuration Release --output $(OUTPUT_DIR) -p:Version=$(VERSION)
-
-cli-install: libs-pack
-	@echo "Removing old CLI tool (if any)" && \
-	dotnet tool uninstall --global $(PROJECT_NAME).cli || true
-	@echo "Installing CLI" && \
-	dotnet tool install --global $(PROJECT_NAME).cli --add-source $(OUTPUT_DIR) --version 1.0.0

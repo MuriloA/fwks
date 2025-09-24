@@ -38,7 +38,7 @@ public static class ConnectionStringOptionsExtensions
         var credentials = username.IsNullOrWhiteSpace() || password.IsNullOrWhiteSpace() ? string.Empty : $"{username}:{password}@";
 
         var queryOptions = builder.Options
-            .Where(o => new[] { UserKey, PasswordKey, DbKey }.Contains(o.Key) is false)
+            .Where(o => new[] { UserKey, PasswordKey, DbKey }.Contains(o.Key) is not true)
             .Select(o => $"{o.Key.Camelize()}={o.Value}");
 
         var options = queryOptions.ToList();

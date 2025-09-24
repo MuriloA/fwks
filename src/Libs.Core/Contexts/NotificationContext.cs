@@ -21,8 +21,9 @@ public sealed class NotificationContext : INotificationContext
             _messages.Add(message.Key, message.Value);
     }
 
-    public void Add(ApplicationError error, ValidationResult validationResult)
-    {
-        Add(error, validationResult.ToErrorDictionary());
-    }
+    public void Add(ApplicationError error, ValidationResult validationResult) =>
+        Add(error, validationResult.NormalizeErrors());
+    
+    public void Add(ApplicationError error) =>
+        Add(error, new Dictionary<string, object?>());
 }

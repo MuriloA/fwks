@@ -11,7 +11,6 @@ public static class CommandQueryConfiguration
     [
         typeof(ICommandHandler<>),
         typeof(ICommandHandler<,>),
-        typeof(IQueryHandler<>),
         typeof(IQueryHandler<,>)
     ];
 

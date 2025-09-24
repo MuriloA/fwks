@@ -10,4 +10,5 @@ public interface INotificationContext
     IDictionary<string, object?> Messages { get; }
     void Add(ApplicationError error, IDictionary<string, object?> messages);
     void Add(ApplicationError error, ValidationResult validationResult);
+    void Add(ApplicationError error);
 }

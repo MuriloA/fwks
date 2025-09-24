@@ -6,11 +6,11 @@ namespace FwksLabs.Libs.Core.CQS.Abstractions;
 public interface ICommandHandler<in TCommand>
     where TCommand : ICommand
 {
-    ValueTask HandleAsync(TCommand command, CancellationToken cancellationToken);
+    Task HandleAsync(TCommand command, CancellationToken cancellationToken);
 }
 
 public interface ICommandHandler<in TCommand, TResult>
     where TCommand : ICommand<TResult>
 {
-    ValueTask<TResult> HandleAsync(TCommand command, CancellationToken cancellationToken);
+    Task<TResult> HandleAsync(TCommand command, CancellationToken cancellationToken);
 }

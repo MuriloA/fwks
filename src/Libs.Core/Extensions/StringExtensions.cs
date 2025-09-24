@@ -9,7 +9,8 @@ namespace FwksLabs.Libs.Core.Extensions;
 
 public static class StringExtensions
 {
-    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? input) => string.IsNullOrWhiteSpace(input);
+    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? input) => 
+        string.IsNullOrWhiteSpace(input);
 
     public static TOutput[] ToArrayOf<TOutput>(this string input, char separator = ',')
     {
@@ -29,9 +30,7 @@ public static class StringExtensions
     public static Guid Decode(this string input) => Base62Encoder.Decode(input);
 
     public static string PluralizeEntity(this string name) =>
-        name.Contains("Entity")
-            ? name[..^"Entity".Length].Pluralize()
-            : name.Pluralize();
+        name.Replace("Entity", string.Empty).Pluralize();
 
     public static string Format(this string input, params object[] args) => string.Format(input, args);
 
@@ -56,7 +55,7 @@ public static class StringExtensions
 
     public static DateTime ToDateTime(this string input)
     {
-        if (DateTime.TryParse(input, out var datetime) is false)
+        if (DateTime.TryParse(input, out var datetime) is not true)
             throw new FormatException("Input string was not recognized as a DateTime");
 
         return datetime;
@@ -64,7 +63,7 @@ public static class StringExtensions
 
     public static DateTimeOffset ToDateTimeOffset(this string input)
     {
-        if (DateTimeOffset.TryParse(input, out var datetime) is false)
+        if (DateTimeOffset.TryParse(input, out var datetime) is not true)
             throw new FormatException("Input string was not recognized as a DateTime");
 
         return datetime;

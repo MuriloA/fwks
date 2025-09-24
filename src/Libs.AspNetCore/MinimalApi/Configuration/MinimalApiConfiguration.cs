@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Asp.Versioning;
 using FwksLabs.Libs.AspNetCore.MinimalApi.Abstractions;
 using FwksLabs.Libs.AspNetCore.MinimalApi.Attributes;
 using FwksLabs.Libs.Core.Extensions;
-using Humanizer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -18,60 +16,48 @@ public static class MinimalApiConfiguration
     public static void MapResourcesFromAssembly<TAssembly>(this IEndpointRouteBuilder builder)
     {
         var types = typeof(TAssembly).Assembly.GetTypes();
-        var resourceType = typeof(IResource);
 
-        foreach (var resource in types.Where(IsResourceGroup))
+        foreach (var resourceType in types.Where(IsResourceDefinition))
         {
-            var attr = resource.GetCustomAttribute<ResourcePrefixAttribute>();
+            var resource = (ResourceDefinition)Activator.CreateInstance(resourceType)!;
 
-            if (attr is null)
-                continue;
-
-            builder
-                .MapGroup($"v{{version:apiVersion}}/{attr.Prefix}")
-                .ConfigureTags(attr, attr.Prefix)
+            var group = builder
+                .MapGroup($"v{{version:apiVersion}}/{resource.Prefix}")
+                .ConfigureTags(resource)
                 .ConfigureProblems(resource)
-                .ConfigureVersionSet(resource)
-                .ConfigureEndpoints(types, resource);
+                .ConfigureVersionSet(resource);
+
+            resource.Configure(group);
+
+            group.ConfigureEndpoints(types, resourceType, resource);
         }
 
         return;
 
-        bool IsResourceGroup(Type type)
+        bool IsResourceDefinition(Type t)
         {
-            return type.IsInterface && type.IsAssignableTo(resourceType) && type != resourceType;
+            return t.IsAbstract is not true && t.IsSubclassOf(typeof(ResourceDefinition));
         }
     }
 
-    private static RouteGroupBuilder ConfigureTags(this RouteGroupBuilder builder, ResourcePrefixAttribute attr, string fallback)
+    private static RouteGroupBuilder ConfigureTags(this RouteGroupBuilder builder, ResourceDefinition definition)
     {
-        var tags = attr.Tags.Select(x => x.IsNullOrWhiteSpace() is false);
-
-        return builder
-            .WithTags(tags.Any()
-                ? attr.Tags
-                : [fallback.Pascalize()]);
+        return builder.WithTags([.. definition.Tags.Where(x => x.IsNullOrWhiteSpace() is not true)]);
     }
 
-    private static RouteGroupBuilder ConfigureProblems(this RouteGroupBuilder builder, Type resource)
+    private static RouteGroupBuilder ConfigureProblems(this RouteGroupBuilder builder, ResourceDefinition definition)
     {
-        var uniqueProblems = new List<int> { StatusCodes.Status500InternalServerError }
-            .Concat(resource.GetCustomAttributes<ResourceProblemAttribute>()?.Select(x => x.Problem) ?? [])
-            .Distinct();
-
-        foreach (var problem in uniqueProblems)
+        foreach (var problem in definition.Problems.Concat([StatusCodes.Status500InternalServerError]).Distinct())
             builder.ProducesProblem(problem);
 
         return builder;
     }
 
-    private static RouteGroupBuilder ConfigureVersionSet(this RouteGroupBuilder builder, Type resource)
+    private static RouteGroupBuilder ConfigureVersionSet(this RouteGroupBuilder builder, ResourceDefinition definition)
     {
-        var availableVersions = resource.GetCustomAttribute<ResourceVersionSetAttribute>()?.Versions ?? [1];
-
         var set = builder.NewApiVersionSet().ReportApiVersions();
 
-        foreach (var version in availableVersions)
+        foreach (var version in definition.Versions)
             set.HasApiVersion(new ApiVersion(version));
 
         builder.WithApiVersionSet(set.Build());
@@ -79,15 +65,18 @@ public static class MinimalApiConfiguration
         return builder;
     }
 
-    private static void ConfigureEndpoints(this RouteGroupBuilder builder, Type[] types, Type resourceType)
+    private static void ConfigureEndpoints(this RouteGroupBuilder builder, Type[] types, Type resourceType, ResourceDefinition definition)
     {
         var endpoints = types
-            .Where(x => x.IsClass && resourceType.IsAssignableFrom(x))
+            .Where(x => x is { IsClass: true, IsAbstract: false })
+            .Where(x => x.GetCustomAttribute<ResourceEndpointAttribute>()?.Type == resourceType)
             .Select(Activator.CreateInstance)
             .Cast<IEndpoint>()
             .ToArray();
 
         foreach (var endpoint in endpoints)
-            endpoint.Map(builder);
+            endpoint
+                .Map(builder)
+                .WithTags(definition.Tags);
     }
 }

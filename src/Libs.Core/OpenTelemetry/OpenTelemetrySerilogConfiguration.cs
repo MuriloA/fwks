@@ -2,7 +2,10 @@ using System;
 using FwksLabs.Libs.Core.Extensions;
 using Humanizer;
 using Serilog;
+using Serilog.Enrichers.Span;
 using Serilog.Events;
+using Standard = FwksLabs.Libs.Core.OpenTelemetry.OpenTelemetryProperties.Standard;
+using Fwks = FwksLabs.Libs.Core.OpenTelemetry.OpenTelemetryProperties.FwksLabs;
 
 namespace FwksLabs.Libs.Core.OpenTelemetry;
 
@@ -20,6 +23,9 @@ public static class OpenTelemetrySerilogConfiguration
 
         var configuration = new LoggerConfiguration()
             .Enrich.FromLogContext()
+            .Enrich.WithSpan()
+            .Enrich.WithEnvironmentName()
+            .Enrich.WithMachineName()
             .MinimumLevel.Is(minimumLevel);
 
         foreach (var level in options.LoggerMinimumLevelOverrides)
@@ -34,13 +40,13 @@ public static class OpenTelemetrySerilogConfiguration
 
         void AddAttributes()
         {
-            options.Attributes.Add(OpenTelemetryProperties.Standard.ServiceInstanceId, Environment.MachineName);
-            options.Attributes.Add(OpenTelemetryProperties.Standard.ServiceName, options.AppName.Kebaberize());
-            options.Attributes.Add(OpenTelemetryProperties.Standard.ServiceVersion, options.AppVersion);
+            options.Attributes.Add(Standard.ServiceInstanceId, Environment.MachineName);
+            options.Attributes.Add(Standard.ServiceName, options.AppName.Kebaberize());
+            options.Attributes.Add(Standard.ServiceVersion, options.AppVersion);
 
-            options.Attributes.Add(OpenTelemetryProperties.FwksLabs.ServicePlatform, options.AppPlatform.Kebaberize());
-            options.Attributes.Add(OpenTelemetryProperties.FwksLabs.ServiceNamespace, options.AppNamespace.Kebaberize());
-            options.Attributes.Add(OpenTelemetryProperties.FwksLabs.ServiceMaintainer, options.AppMaintainer.Kebaberize());
+            options.Attributes.Add(Fwks.ServicePlatform, options.AppPlatform.Kebaberize());
+            options.Attributes.Add(Fwks.ServiceNamespace, options.AppNamespace.Kebaberize());
+            options.Attributes.Add(Fwks.ServiceMaintainer, options.AppMaintainer.Kebaberize());
         }
     }
 }

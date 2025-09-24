@@ -4,15 +4,13 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace FwksLabs.Libs.AspNetCore.IO;
 
 public static class CompressionExtensions
 {
-    public static IHostApplicationBuilder ConfigureResponseCompression(this IHostApplicationBuilder builder)
-    {
-        builder.Services
+    public static IServiceCollection AddDefaultResponseCompression(this IServiceCollection services) =>
+        services
             .AddResponseCompression()
             .Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Optimal)
             .Configure<BrotliCompressionProviderOptions>(options => options.Level = CompressionLevel.Optimal)
@@ -23,7 +21,4 @@ public static class CompressionExtensions
                 options.Providers.Add<GzipCompressionProvider>();
                 options.Providers.Add<BrotliCompressionProvider>();
             });
-
-        return builder;
-    }
 }

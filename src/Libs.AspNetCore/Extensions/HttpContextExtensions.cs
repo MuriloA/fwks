@@ -20,4 +20,9 @@ public static class HttpContextExtensions
     }
 
     public static T? GetService<T>(this HttpContext context) => context.RequestServices.GetService<T>();
+
+    public static string GetRequestHeader(this HttpContext httpContext, string key, string? fallback = null) =>
+        httpContext.Request.Headers.TryGetValue(key, out var headerValue) is not true
+            ? fallback ?? string.Empty
+            : headerValue.ToString();
 }
